@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,7 +18,7 @@ public class BoardPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -28,7 +29,10 @@ public class BoardPost {
 
     @Lob
     private String content;
+
+
     private String imageUrl;
+
     private int likeCount;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -41,6 +45,7 @@ public class BoardPost {
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
+        this.likeCount = 0;
     }
 
     public void incrementLike() {
