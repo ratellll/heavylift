@@ -34,6 +34,14 @@ public class WorkoutRoutine {
     @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<RoutineExercise> exercises = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "routine_favorites",
+            joinColumns = @JoinColumn(name = "routine_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> favoritedBy = new ArrayList<>();
+
     @Builder
     public WorkoutRoutine(User user, String title, String description, boolean shared, List<RoutineExercise> exercises) {
         this.user = user;
@@ -45,9 +53,14 @@ public class WorkoutRoutine {
         }
     }
 
-    public void changeRoutineInfo(String title, String description, boolean shared) {
+    public void update(String title, String description, boolean shared) {
         this.title = title;
         this.description = description;
         this.shared = shared;
+    }
+
+    public void setExercises(List<RoutineExercise> newExercises) {
+        this.exercises.clear();
+        this.exercises.addAll(newExercises);
     }
 }

@@ -14,8 +14,6 @@ import java.util.List;
 @Builder
 public class CreateWorkoutRoutineRequest {
 
-    @NotNull(message = "회원 ID는 필수입니다.")
-    private Long userId;
 
     @NotBlank(message = "루틴 제목은 필수입니다.")
     @Size(max = 10, message = "제목은 10자 이내로 작성해주세요.")
