@@ -27,16 +27,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = resolveToken(request);
         if (token != null && jwtProvider.validateToken(token)) {
-            // 블랙리스트 토큰 검사
             Boolean isBlacklisted = redisTemplate.hasKey(token);
             if (Boolean.TRUE.equals(isBlacklisted)) {
-                filterChain.doFilter(request, response); // 무시하고 다음 필터로
+                filterChain.doFilter(request, response);
                 return;
             }
             Long userId = jwtProvider.getUserIdFromToken(token);
             SecurityContextHolder.getContext().setAuthentication(new JwtUserAuthentication(userId));
         }
-
         filterChain.doFilter(request, response);
     }
 
