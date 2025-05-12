@@ -3,7 +3,6 @@ package com.workout.heavylift.impl;
 
 import com.workout.heavylift.domain.User;
 import com.workout.heavylift.domain.WorkoutLog;
-import com.workout.heavylift.domain.WorkoutLogExercise;
 import com.workout.heavylift.dto.workoutlog.CreateWorkoutLogRequest;
 import com.workout.heavylift.dto.workoutlog.WorkoutLogResponse;
 import com.workout.heavylift.repository.ExerciseRepository;
@@ -16,14 +15,24 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class WorkoutLogServiceImpl implements WorkoutLogService{
+public class WorkoutLogServiceImpl implements WorkoutLogService {
+
+    private final WorkoutLogRepository workoutLogRepository;
+    private final WorkoutLogExerciseRepository workoutLogExerciseRepository;
+    private final UserRepository userRepository;
+    private final ExerciseRepository exerciseRepository;
 
 
+    @Override
+    public WorkoutLogResponse createLog(CreateWorkoutLogRequest request) {
+        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다"));
 
-
+        WorkoutLog log = WorkoutLog.builder()
+                .user(user)
+                .workoutDateTime(request.getWorkoutDateTime())
+                .durationMinutes()
+    }
 }

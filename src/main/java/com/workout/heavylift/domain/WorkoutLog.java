@@ -45,5 +45,5 @@ public class WorkoutLog {
         this.logExercises.clear();
         this.logExercises.addAll(newExercises);
 
-
+    }
 }

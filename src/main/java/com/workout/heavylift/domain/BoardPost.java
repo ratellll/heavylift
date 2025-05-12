@@ -30,7 +30,6 @@ public class BoardPost {
     @Lob
     private String content;
 
-
     private String imageUrl;
 
     private int likeCount;

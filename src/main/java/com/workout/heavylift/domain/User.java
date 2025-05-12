@@ -28,6 +28,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<WorkoutRoutine> workoutRoutines = new ArrayList<>();
 
