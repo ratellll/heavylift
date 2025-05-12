@@ -41,4 +41,9 @@ public class WorkoutLog {
         this.durationMinutes = durationMinutes;
         this.caloriesBurned = caloriesBurned;
     }
+    public void updateExercises(List<WorkoutLogExercise> newExercises) {
+        this.logExercises.clear();
+        this.logExercises.addAll(newExercises);
+
+
 }

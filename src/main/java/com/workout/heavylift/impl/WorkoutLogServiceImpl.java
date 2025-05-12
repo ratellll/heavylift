@@ -23,21 +23,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class WorkoutLogServiceImpl implements WorkoutLogService{
 
-    private final WorkoutLogRepository workoutLogRepository;
-    private final WorkoutLogExerciseRepository workoutLogExerciseRepository;
-    private final ExerciseRepository exerciseRepository;
-    private final UserRepository userRepository;
 
-    @Override
-    public WorkoutLogResponse createLog(CreateWorkoutLogRequest request) {
-        Long userId = SecurityUtil.getCurrenUserId();
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저를 찾을수없습니다"));
-
-        WorkoutLog log = WorkoutLog.builder()
-                .user(user)
-                .workoutDateTime(LocalDateTime.now())
-                .
-    }
 
 
 }
