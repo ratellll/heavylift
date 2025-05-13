@@ -8,9 +8,11 @@ import com.workout.heavylift.domain.User;
 import com.workout.heavylift.domain.WorkoutRoutine;
 import com.workout.heavylift.dto.workoutoutine.WorkoutRoutineResponse;
 import com.workout.heavylift.repository.FavoriteRoutineRepository;
+import com.workout.heavylift.repository.RoutineExerciseRepository;
 import com.workout.heavylift.repository.UserRepository;
 import com.workout.heavylift.repository.WorkoutRoutineRepository;
 import com.workout.heavylift.service.FavoriteRoutineService;
+import com.workout.heavylift.util.OneRepMaxUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class FavoriteRoutineServiceImpl implements FavoriteRoutineService {
     private final FavoriteRoutineRepository favoriteRoutineRepository;
     private final UserRepository userRepository;
     private final WorkoutRoutineRepository workoutRoutineRepository;
+    private final RoutineExerciseRepository routineExerciseRepository;
 
     @Override
     public void addFavorite(Long routineId) {
@@ -104,6 +107,7 @@ public class FavoriteRoutineServiceImpl implements FavoriteRoutineService {
                         .sets(e.getSets())
                         .reps(e.getReps())
                         .weight(e.getWeight())
+                        .oneRepMax(OneRepMaxUtil.calculate(e.getWeight(), e.getReps()))
                         .build())
                 .toList();
 
@@ -111,6 +115,6 @@ public class FavoriteRoutineServiceImpl implements FavoriteRoutineService {
 
         copy.getExercises().addAll(copyExercises);
 
-        return WorkoutRoutineResponse.from(copy);
+        return WorkoutRoutineResponse.fromEntity(copy);
     }
 }

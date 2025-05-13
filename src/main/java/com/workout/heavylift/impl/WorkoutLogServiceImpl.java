@@ -13,6 +13,7 @@ import com.workout.heavylift.repository.UserRepository;
 import com.workout.heavylift.repository.WorkoutLogExerciseRepository;
 import com.workout.heavylift.repository.WorkoutLogRepository;
 import com.workout.heavylift.service.WorkoutLogService;
+import com.workout.heavylift.util.OneRepMaxUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService {
         }
 
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을수없습니다"));
 
         WorkoutLog log = WorkoutLog.builder()
                 .user(user)
@@ -55,13 +56,16 @@ public class WorkoutLogServiceImpl implements WorkoutLogService {
 
         List<WorkoutLogExercise> exercises = request.getLogExercises().stream().map(e -> {
             Exercise exercise = exerciseRepository.findById(e.getExerciseId())
-                    .orElseThrow(() -> new EntityNotFoundException("Exercise not found"));
+                    .orElseThrow(() -> new EntityNotFoundException("운동을 찾을수없습니다"));
+
+            double oneRepMax = OneRepMaxUtil.calculate(e.getWeight(), e.getReps());
             return WorkoutLogExercise.builder()
                     .workoutLog(log)
                     .exercise(exercise)
                     .sets(e.getSets())
                     .reps(e.getReps())
                     .weight(e.getWeight())
+                    .oneRepMax(oneRepMax)
                     .build();
         }).collect(Collectors.toList());
 
