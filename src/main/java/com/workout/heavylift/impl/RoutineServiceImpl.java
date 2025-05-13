@@ -1,6 +1,7 @@
 package com.workout.heavylift.impl;
 
 
+import com.workout.heavylift.config.SecurityUtil;
 import com.workout.heavylift.domain.Exercise;
 import com.workout.heavylift.domain.RoutineExercise;
 import com.workout.heavylift.domain.User;

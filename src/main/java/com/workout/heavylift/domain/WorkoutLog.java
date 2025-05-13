@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +28,13 @@ public class WorkoutLog {
     private LocalDateTime workoutDateTime = LocalDateTime.now();
 
     private int durationMinutes;
-    private int caloriesBurned;
+    private double caloriesBurned;
 
     @OneToMany(mappedBy = "workoutLog", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<WorkoutLogExercise> logExercises = new ArrayList<>();
 
     @Builder
-    public WorkoutLog(User user, LocalDateTime workoutDateTime, int durationMinutes, int caloriesBurned) {
+    public WorkoutLog(User user, LocalDateTime workoutDateTime, int durationMinutes, double caloriesBurned) {
         this.user = user;
         this.workoutDateTime = workoutDateTime;
         this.durationMinutes = durationMinutes;

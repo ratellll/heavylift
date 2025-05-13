@@ -14,23 +14,23 @@ public class WorkoutLogResponse {
     private Long id;
     private LocalDateTime workoutDateTime;
     private int durationMinutes;
-    private int caloriesBurned;
+    private double caloriesBurned;
     private List<WorkoutLogExerciseDto> logExercises;
 
     public static WorkoutLogResponse fromEntity(WorkoutLog log) {
         return WorkoutLogResponse.builder()
                 .id(log.getId())
-                .workoutDateTime(LocalDateTime.now())
+                .workoutDateTime(log.getWorkoutDateTime())
                 .durationMinutes(log.getDurationMinutes())
+                .caloriesBurned(log.getCaloriesBurned())
                 .logExercises(
-                        log.getLogExercises().stream()
-                                .map(e -> WorkoutLogExerciseDto.builder()
-                                        .exerciseId(e.getExercise().getId())
-                                        .sets(e.getSets())
-                                        .reps(e.getReps())
-                                        .weight(e.getWeight())
-                                        .build())
-                                .collect(Collectors.toList())
+                        log.getLogExercises().stream().map(e -> WorkoutLogExerciseDto.builder()
+                                .exerciseId(e.getExercise().getId())
+                                .sets(e.getSets())
+                                .reps(e.getReps())
+                                .weight(e.getWeight())
+                                .build()
+                        ).collect(Collectors.toList())
                 )
                 .build();
     }

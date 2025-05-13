@@ -1,6 +1,7 @@
 package com.workout.heavylift.impl;
 
 
+import com.workout.heavylift.config.SecurityUtil;
 import com.workout.heavylift.domain.Exercise;
 import com.workout.heavylift.domain.User;
 import com.workout.heavylift.domain.WorkoutLog;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,21 +36,26 @@ public class WorkoutLogServiceImpl implements WorkoutLogService {
 
     @Override
     public WorkoutLogResponse createLog(CreateWorkoutLogRequest request) {
+        Long currentUserId = SecurityUtil.getCurrentUserId();
+        if (!currentUserId.equals(request.getUserId())) {
+            throw new SecurityException("접근 권한이 없습니다.");
+        }
+
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을수없습니다"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         WorkoutLog log = WorkoutLog.builder()
                 .user(user)
                 .workoutDateTime(request.getWorkoutDateTime())
                 .durationMinutes(request.getDurationMinutes())
-                .caloriesBurned(0)
+                .caloriesBurned(request.getCaloriesBurned())
                 .build();
 
         workoutLogRepository.save(log);
 
         List<WorkoutLogExercise> exercises = request.getLogExercises().stream().map(e -> {
             Exercise exercise = exerciseRepository.findById(e.getExerciseId())
-                    .orElseThrow(() -> new EntityNotFoundException("운동을 찾을수없습니다"));
+                    .orElseThrow(() -> new EntityNotFoundException("Exercise not found"));
             return WorkoutLogExercise.builder()
                     .workoutLog(log)
                     .exercise(exercise)
@@ -59,14 +66,19 @@ public class WorkoutLogServiceImpl implements WorkoutLogService {
         }).collect(Collectors.toList());
 
         workoutLogExerciseRepository.saveAll(exercises);
+        log.getLogExercises().addAll(exercises);
 
         return WorkoutLogResponse.fromEntity(log);
     }
 
     @Override
     public List<WorkoutLogResponse> getLogsByDate(LocalDate date) {
-        return workoutLogRepository.findAll().stream()
-                .filter(l -> l.getWorkoutDateTime().toLocalDate().isEqual(date))
+        Long userId = SecurityUtil.getCurrentUserId();
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        return workoutLogRepository.findByUserIdAndWorkoutDateTimeBetween(userId, start, end).stream()
+                .peek(log -> log.getLogExercises().addAll(workoutLogExerciseRepository.findByWorkoutLog(log)))
                 .map(WorkoutLogResponse::fromEntity)
                 .collect(Collectors.toList());
     }
@@ -75,6 +87,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService {
     public WorkoutLogResponse getLogById(Long logId) {
         WorkoutLog log = workoutLogRepository.findById(logId)
                 .orElseThrow(() -> new EntityNotFoundException("WorkoutLog not found"));
+        log.getLogExercises().addAll(workoutLogExerciseRepository.findByWorkoutLog(log));
         return WorkoutLogResponse.fromEntity(log);
     }
 
@@ -88,18 +101,24 @@ public class WorkoutLogServiceImpl implements WorkoutLogService {
 
     @Override
     public List<WorkoutLogResponse> getWeeklyStats() {
-        LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
-        return workoutLogRepository.findAll().stream()
-                .filter(log -> !log.getWorkoutDateTime().toLocalDate().isBefore(sevenDaysAgo))
+        Long userId = SecurityUtil.getCurrentUserId();
+        LocalDateTime start = LocalDate.now().minusDays(6).atStartOfDay();
+        LocalDateTime end = LocalDate.now().plusDays(1).atStartOfDay();
+
+        return workoutLogRepository.findByUserIdAndWorkoutDateTimeBetween(userId, start, end).stream()
+                .peek(log -> log.getLogExercises().addAll(workoutLogExerciseRepository.findByWorkoutLog(log)))
                 .map(WorkoutLogResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<WorkoutLogResponse> getMonthlyStats() {
-        LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
-        return workoutLogRepository.findAll().stream()
-                .filter(log -> !log.getWorkoutDateTime().toLocalDate().isBefore(thirtyDaysAgo))
+        Long userId = SecurityUtil.getCurrentUserId();
+        LocalDateTime start = LocalDate.now().minusDays(29).atStartOfDay();
+        LocalDateTime end = LocalDate.now().plusDays(1).atStartOfDay();
+
+        return workoutLogRepository.findByUserIdAndWorkoutDateTimeBetween(userId, start, end).stream()
+                .peek(log -> log.getLogExercises().addAll(workoutLogExerciseRepository.findByWorkoutLog(log)))
                 .map(WorkoutLogResponse::fromEntity)
                 .collect(Collectors.toList());
     }
