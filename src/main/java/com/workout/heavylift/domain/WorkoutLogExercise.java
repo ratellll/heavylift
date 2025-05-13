@@ -28,14 +28,18 @@ public class WorkoutLogExercise {
     private double weight;
     private double totalWeight;
 
+    private double oneRepMax;
+
+
     @Builder
-    public WorkoutLogExercise(WorkoutLog workoutLog, Exercise exercise, int sets, int reps, double weight,double totalWeight) {
+    public WorkoutLogExercise(WorkoutLog workoutLog, Exercise exercise, int sets, int reps, double weight,double totalWeight,double oneRepMax) {
         this.workoutLog = workoutLog;
         this.exercise = exercise;
         this.sets = sets;
         this.reps = reps;
         this.weight = weight;
         this.totalWeight = totalWeight;
+        this.oneRepMax = oneRepMax;
     }
 
     public void updateLogExercise(int sets, int reps, double weight) {
