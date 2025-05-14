@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +39,7 @@ public class RoutineServiceImpl implements RoutineService {
     public WorkoutRoutineResponse createRoutine(CreateWorkoutRoutineRequest request) {
         Long userId = SecurityUtil.getCurrentUserId();
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
 
         WorkoutRoutine routine = WorkoutRoutine.builder()
                 .title(request.getTitle())
@@ -52,7 +53,7 @@ public class RoutineServiceImpl implements RoutineService {
         List<RoutineExercise> exercises = new ArrayList<>();
         for (RoutineExerciseDto dto : request.getExercises()) {
             Exercise exercise = exerciseRepository.findById(dto.getExerciseId())
-                    .orElseThrow(() -> new EntityNotFoundException("Exercise not found"));
+                    .orElseThrow(() -> new EntityNotFoundException("운동을 찾을 수 없습니다."));
             RoutineExercise re = RoutineExercise.builder()
                     .exercise(exercise)
                     .routine(routine)
@@ -71,14 +72,13 @@ public class RoutineServiceImpl implements RoutineService {
     @Override
     public WorkoutRoutineResponse getRoutine(Long routineId) {
         WorkoutRoutine routine = routineRepository.findById(routineId)
-                .orElseThrow(() -> new EntityNotFoundException("Routine not found"));
+                .orElseThrow(() -> new EntityNotFoundException("루틴을 찾을 수 없습니다."));
         return WorkoutRoutineResponse.fromEntity(routine);
     }
 
     @Override
     public List<WorkoutRoutineResponse> getAllRoutines() {
-        return routineRepository.findAllSharedWithExercises()
-                .stream()
+        return routineRepository.findAllSharedWithExercises().stream()
                 .map(WorkoutRoutineResponse::fromEntity)
                 .collect(Collectors.toList());
     }
@@ -86,24 +86,22 @@ public class RoutineServiceImpl implements RoutineService {
     @Override
     public List<WorkoutRoutineResponse> getFavoriteRoutines() {
         Long userId = SecurityUtil.getCurrentUserId();
-        return routineRepository.findFavoritesByUserId(userId)
-                .stream()
+        return routineRepository.findFavoritesByUserId(userId).stream()
                 .map(WorkoutRoutineResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public WorkoutRoutineResponse updateRoutine(Long routineId, UpdateWorkoutRoutineRequest request) {
-        WorkoutRoutine routine = routineRepository.findById(routineId)
-                .orElseThrow(() -> new EntityNotFoundException("Routine not found"));
+    public WorkoutRoutineResponse updateRoutine(Long id, UpdateWorkoutRoutineRequest request) {
+        WorkoutRoutine routine = routineRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("루틴을 찾을 수 없습니다."));
 
         routine.update(request.getTitle(), request.getDescription(), request.isShared());
-        routineExerciseRepository.deleteByRoutine(routine);
 
-        List<RoutineExercise> newExercises = new ArrayList<>();
+        List<RoutineExercise> exercises = new ArrayList<>();
         for (RoutineExerciseDto dto : request.getExercises()) {
             Exercise exercise = exerciseRepository.findById(dto.getExerciseId())
-                    .orElseThrow(() -> new EntityNotFoundException("Exercise not found"));
+                    .orElseThrow(() -> new EntityNotFoundException("운동을 찾을 수 없습니다."));
             RoutineExercise re = RoutineExercise.builder()
                     .exercise(exercise)
                     .routine(routine)
@@ -111,37 +109,40 @@ public class RoutineServiceImpl implements RoutineService {
                     .reps(dto.getReps())
                     .weight(dto.getWeight())
                     .build();
-            newExercises.add(re);
+            exercises.add(re);
         }
-        routineExerciseRepository.saveAll(newExercises);
-        routine.setExercises(newExercises);
+
+        routine.setExercises(exercises);
+        routineExerciseRepository.saveAll(exercises);
 
         return WorkoutRoutineResponse.fromEntity(routine);
     }
 
     @Override
-    public void deleteRoutine(Long routineId) {
-        WorkoutRoutine routine = routineRepository.findById(routineId)
-                .orElseThrow(() -> new EntityNotFoundException("Routine not found"));
-        routineExerciseRepository.deleteByRoutine(routine);
+    public void deleteRoutine(Long id) {
+        WorkoutRoutine routine = routineRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("루틴을 찾을 수 없습니다."));
         routineRepository.delete(routine);
     }
 
     @Override
     public void addToFavorites(Long routineId) {
         Long userId = SecurityUtil.getCurrentUserId();
+        WorkoutRoutine routine = routineRepository.findById(routineId)
+                .orElseThrow(() -> new EntityNotFoundException("루틴을 찾을 수 없습니다."));
         routineRepository.addFavorite(userId, routineId);
     }
 
     @Override
     public WorkoutRoutineResponse getRoutineTemplate() {
-        WorkoutRoutine template = WorkoutRoutine.builder()
-                .title("기본 루틴")
-                .description("예시 루틴")
+        // 샘플 템플릿 반환 로직
+        WorkoutRoutine sample = WorkoutRoutine.builder()
+                .title("기본 루틴 템플릿")
+                .description("가슴/어깨/삼두 구성 예시")
                 .shared(false)
+                .exercises(Collections.emptyList())
                 .build();
-        return WorkoutRoutineResponse.fromEntity(template);
+        return WorkoutRoutineResponse.fromEntity(sample);
     }
-
-
 }
+

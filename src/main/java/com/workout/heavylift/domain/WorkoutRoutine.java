@@ -43,7 +43,7 @@ public class WorkoutRoutine {
     private List<User> favoritedBy = new ArrayList<>();
 
     @Builder
-    public WorkoutRoutine(User user, String title, String description, boolean shared, List<RoutineExercise> exercises) {
+    public WorkoutRoutine(User user,String title, String description, boolean shared, List<RoutineExercise> exercises) {
         this.user = user;
         this.title = title;
         this.description = description;

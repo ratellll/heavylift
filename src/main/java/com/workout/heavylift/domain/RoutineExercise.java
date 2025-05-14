@@ -32,12 +32,13 @@ public class RoutineExercise {
 
 
     @Builder
-    public RoutineExercise(WorkoutRoutine routine, Exercise exercise, int sets, int reps, double weight) {
+    public RoutineExercise(WorkoutRoutine routine, Exercise exercise, int sets, int reps, double weight,double oneRepMax) {
         this.routine = routine;
         this.exercise = exercise;
         this.sets = sets;
         this.reps = reps;
         this.weight = weight;
+        this.oneRepMax = oneRepMax;
     }
 
     public void updateExerciseInfo(int sets, int reps, double weight) {
