@@ -1,5 +1,6 @@
 package com.workout.heavylift.impl;
 
+import com.workout.heavylift.domain.MuscleGroup;
 import com.workout.heavylift.domain.WorkoutRoutine;
 import com.workout.heavylift.dto.workoutoutine.WorkoutRoutineResponse;
 import com.workout.heavylift.repository.WorkoutRoutineRepository;
@@ -28,7 +29,13 @@ import java.util.stream.Collectors;
 
         @Override
         public List<WorkoutRoutineResponse> filterByMuscleGroup(String muscleGroup) {
-            List<WorkoutRoutine> routines = routineRepository.findByMuscleGroupAndSharedTrue(muscleGroup);
+            MuscleGroup group;
+            try {
+                group = MuscleGroup.valueOf(muscleGroup.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("존재하지 않는 근육 그룹입니다.");
+            }
+            List<WorkoutRoutine> routines = routineRepository.findByMuscleGroupAndSharedTrue(group);
             return routines.stream()
                     .map(WorkoutRoutineResponse::fromEntity)
                     .collect(Collectors.toList());

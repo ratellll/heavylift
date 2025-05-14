@@ -1,5 +1,6 @@
 package com.workout.heavylift.repository;
 
+import com.workout.heavylift.domain.MuscleGroup;
 import com.workout.heavylift.domain.WorkoutRoutine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,9 +25,12 @@ public interface WorkoutRoutineRepository extends JpaRepository<WorkoutRoutine, 
 
     List<WorkoutRoutine> findByTitleContainingIgnoreCaseAndSharedTrue(String keyword);
 
-    @Query("SELECT r FROM WorkoutRoutine r JOIN r.exercises e WHERE e.exercise.muscleGroup.name = :muscleGroup AND r.shared = true")
-    List<WorkoutRoutine> findByMuscleGroupAndSharedTrue(@Param("muscleGroup") String muscleGroup);
+    @Query("SELECT r FROM WorkoutRoutine r JOIN r.exercises e WHERE e.exercise.muscleGroup = :muscleGroup AND r.shared = true")
+    List<WorkoutRoutine> findByMuscleGroupAndSharedTrue(@Param("muscleGroup") MuscleGroup muscleGroup);
 
     @Query("SELECT r FROM WorkoutRoutine r JOIN r.favoritedBy u WHERE u.id = :userId AND LOWER(r.title) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<WorkoutRoutine> findFavoritesByUserIdAndTitleContainingIgnoreCase(@Param("userId") Long userId, @Param("keyword") String keyword);
+
+
+
 }

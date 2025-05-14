@@ -6,9 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,13 +18,9 @@ public class Exercise {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "exercise_muscle_group",
-            joinColumns = @JoinColumn(name = "exercise_id"),
-            inverseJoinColumns = @JoinColumn(name = "muscle_group_id")
-    )
-    private final List<MuscleGroup> muscleGroups = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MuscleGroup muscleGroup;
 
     @Builder
     public Exercise(String name) {
@@ -35,7 +28,7 @@ public class Exercise {
     }
 
     public void addMuscleGroup(MuscleGroup muscleGroup) {
-        this.muscleGroups.add(muscleGroup);
+        this.muscleGroup =muscleGroup;
     }
 }
 
