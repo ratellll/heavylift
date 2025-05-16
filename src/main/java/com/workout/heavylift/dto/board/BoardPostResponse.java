@@ -9,7 +9,6 @@ import lombok.Getter;
 public class BoardPostResponse {
 
     private Long id;
-    private String title;
     private String content;
     private String imageUrl;
     private int likeCount;
@@ -18,7 +17,6 @@ public class BoardPostResponse {
     public static BoardPostResponse fromEntity(BoardPost post) {
         return BoardPostResponse.builder()
                 .id(post.getId())
-                .title(post.getTitle())
                 .content(post.getContent())
                 .imageUrl(post.getImageUrl())
                 .likeCount(post.getLikeCount())

@@ -24,9 +24,6 @@ public class BoardPost {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
-    private String title;
-
     @Lob
     private String content;
 
@@ -39,9 +36,8 @@ public class BoardPost {
 
 
     @Builder
-    public BoardPost(User user, String title, String content, String imageUrl ) {
+    public BoardPost(User user, String content, String imageUrl ) {
         this.user = user;
-        this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
         this.likeCount = 0;
