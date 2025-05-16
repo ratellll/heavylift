@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -30,13 +31,13 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam @Email String email,
                                         @RequestParam @NotBlank String password) {
-        User user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
 
-        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
+        if (user.isEmpty() || !passwordEncoder.matches(password, user.get().getPassword())) {
             return ResponseEntity.badRequest().body("이메일 또는 비밀번호가 일치하지 않습니다.");
         }
 
-        String token = jwtProvider.generateToken(user.getId());
+        String token = jwtProvider.generateToken(user.get().getId());
         return ResponseEntity.ok(token);
     }
 

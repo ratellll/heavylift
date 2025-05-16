@@ -22,6 +22,9 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String nickName;
+
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -39,14 +42,15 @@ public class User {
     private List<BoardPost> postList = new ArrayList<>();
 
     @Builder
-    public User(String email, String name, String password) {
+    public User(String email, String name,String nickName, String password) {
         this.email = email;
         this.name = name;
+        this.nickName = nickName;
         this.password = password;
     }
 
-    public void changeUserName(String name) {
-        this.name = name;
+    public void changeUserNickName(String NickName) {
+        this.name = NickName;
     }
 
     public void changeUserPassword(String password) {
