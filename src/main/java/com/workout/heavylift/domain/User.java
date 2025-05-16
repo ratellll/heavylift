@@ -49,8 +49,8 @@ public class User {
         this.password = password;
     }
 
-    public void changeUserNickName(String NickName) {
-        this.name = NickName;
+    public void changeUserNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public void changeUserPassword(String password) {
