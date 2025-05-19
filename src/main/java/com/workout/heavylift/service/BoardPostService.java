@@ -2,6 +2,7 @@ package com.workout.heavylift.service;
 
 import com.workout.heavylift.dto.board.BoardPostResponse;
 import com.workout.heavylift.dto.board.CreateBoardPostRequest;
+import com.workout.heavylift.dto.board.UpdateBoardPostRequest;
 
 import java.util.List;
 
@@ -15,7 +16,11 @@ public interface BoardPostService {
 
     void deletePost(Long id);
 
-    void postLike(Long postId);
-    void postUnLike(Long postId);
-    void isLiked(Long postId);
+    BoardPostResponse updatePost(Long id, UpdateBoardPostRequest request);
+
+    void likePost(Long postId);
+
+    void unlikePost(Long postId);
+
+    boolean isLiked(Long postId);
 }
