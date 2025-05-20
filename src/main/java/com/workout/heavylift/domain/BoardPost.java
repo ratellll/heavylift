@@ -14,8 +14,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardPost {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,6 +46,10 @@ public class BoardPost {
         this.likeCount = 0;
     }
 
+    public void update(String content, String imageUrl) {
+        this.content = content;
+        this.imageUrl = imageUrl;
+    }
     public void incrementLike() {
         this.likeCount++;
     }

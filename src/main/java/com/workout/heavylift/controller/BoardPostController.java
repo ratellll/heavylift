@@ -76,18 +76,18 @@ public class BoardPostController {
         return ResponseEntity.ok(commentService.getCommentsByPost(postId));
     }
 
+    @PutMapping("/comments/{commentId}")
+    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentRequest request) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        commentService.validateAuthor(commentId, userId);
+        return ResponseEntity.ok(commentService.update(commentId, request));
+    }
+
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
         Long userId = SecurityUtil.getCurrentUserId();
         commentService.validateAuthor(commentId, userId);
         commentService.delete(commentId);
         return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/comments/{commentId}")
-    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentRequest request) {
-        Long userId = SecurityUtil.getCurrentUserId();
-        commentService.validateAuthor(commentId, userId);
-        return ResponseEntity.ok(commentService.update(commentId, request));
     }
 }

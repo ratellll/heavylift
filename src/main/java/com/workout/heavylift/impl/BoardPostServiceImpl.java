@@ -66,8 +66,7 @@ public class BoardPostServiceImpl implements BoardPostService {
     public BoardPostResponse updatePost(Long id, UpdateBoardPostRequest request) {
         BoardPost post = boardPostRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("게시글 없음"));
-
-        post.update(request.getTitle(), request.getContent(), request.getImageUrl());
+        post.update(request.getContent(), request.getImageUrl());
         return BoardPostResponse.fromEntity(post);
     }
 
@@ -100,4 +99,14 @@ public class BoardPostServiceImpl implements BoardPostService {
                 .orElseThrow(() -> new EntityNotFoundException("게시글 없음"));
         return post.isLikedBy(userId);
     }
+
+    @Override
+    public void validateAuthor(Long postId, Long userId) {
+        BoardPost post = boardPostRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("게시글 없음"));
+        if (!post.getUser().getId().equals(userId)) {
+            throw new SecurityException("작성자만 수정/삭제할 수 있습니다.");
+        }
+    }
+
 }

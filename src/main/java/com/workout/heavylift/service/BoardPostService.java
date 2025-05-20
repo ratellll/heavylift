@@ -23,4 +23,6 @@ public interface BoardPostService {
     void unlikePost(Long postId);
 
     boolean isLiked(Long postId);
+
+    void validateAuthor(Long postId, Long userId);
 }
