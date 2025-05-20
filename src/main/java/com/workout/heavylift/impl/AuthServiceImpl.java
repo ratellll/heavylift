@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -51,14 +53,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String refreshToken(String token) {
-//        // 실제 구현 시 refresh 토큰 검증 및 access 토큰 재발급 로직 필요
-//        return jwtProvider.refreshToken(token);
-        return "";
+        Long userId = jwtProvider.validateTokenAndGetUserId(token);
+        return jwtProvider.generateToken(userId);
     }
 
     @Override
     public void logout(String token) {
-        // 구현 예정: 블랙리스트 등록 또는 캐시 삭제 등
+        Long userId = jwtProvider.validateTokenAndGetUserId(token);
+        Long expire = jwtProvider.getExpiration(token);
+        redisTemplate.opsForValue().set(token, "logout", expire, TimeUnit.MILLISECONDS);
     }
 
 
