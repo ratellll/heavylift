@@ -24,13 +24,21 @@ public class RoutineExercise {
     private int reps;
     private double weight;
 
+    private double oneRepMax;
+
+    public void calculateOneRepMax() {
+        this.oneRepMax = weight * (1 + reps / 30.0);
+    }
+
+
     @Builder
-    public RoutineExercise(WorkoutRoutine routine, Exercise exercise, int sets, int reps, double weight) {
+    public RoutineExercise(WorkoutRoutine routine, Exercise exercise, int sets, int reps, double weight,double oneRepMax) {
         this.routine = routine;
         this.exercise = exercise;
         this.sets = sets;
         this.reps = reps;
         this.weight = weight;
+        this.oneRepMax = oneRepMax;
     }
 
     public void updateExerciseInfo(int sets, int reps, double weight) {

@@ -25,20 +25,24 @@ public class WorkoutLogExercise {
 
     private int sets;
     private int reps;
-    private int weight;
-    private int totalWeight;
+    private double weight;
+    private double totalWeight;
+
+    private double oneRepMax;
+
 
     @Builder
-    public WorkoutLogExercise(WorkoutLog workoutLog, Exercise exercise, int sets, int reps, int weight,int totalWeight) {
+    public WorkoutLogExercise(WorkoutLog workoutLog, Exercise exercise, int sets, int reps, double weight,double totalWeight,double oneRepMax) {
         this.workoutLog = workoutLog;
         this.exercise = exercise;
         this.sets = sets;
         this.reps = reps;
         this.weight = weight;
         this.totalWeight = totalWeight;
+        this.oneRepMax = oneRepMax;
     }
 
-    public void updateLogExercise(int sets, int reps, int weight) {
+    public void updateLogExercise(int sets, int reps, double weight) {
         this.sets = sets;
         this.reps = reps;
         this.weight = weight;

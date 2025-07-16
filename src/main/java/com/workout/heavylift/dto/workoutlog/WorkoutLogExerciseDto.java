@@ -12,4 +12,7 @@ public class WorkoutLogExerciseDto {
     private int sets;
     private int reps;
     private double weight;
+
+    private int durationInSeconds;
+    private double caloriesBurned;
 }

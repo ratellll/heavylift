@@ -22,11 +22,15 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String nickName;
+
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String password;
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<WorkoutRoutine> workoutRoutines = new ArrayList<>();
@@ -38,14 +42,15 @@ public class User {
     private List<BoardPost> postList = new ArrayList<>();
 
     @Builder
-    public User(String email, String name, String password) {
+    public User(String email, String name,String nickName, String password) {
         this.email = email;
         this.name = name;
+        this.nickName = nickName;
         this.password = password;
     }
 
-    public void changeUserName(String name) {
-        this.name = name;
+    public void changeUserNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public void changeUserPassword(String password) {

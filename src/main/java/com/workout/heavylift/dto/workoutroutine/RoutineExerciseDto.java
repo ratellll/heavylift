@@ -1,7 +1,6 @@
-package com.workout.heavylift.dto.workoutoutine;
+package com.workout.heavylift.dto.workoutroutine;
 
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 

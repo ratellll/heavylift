@@ -5,9 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @Entity
 @Getter
@@ -21,13 +20,10 @@ public class Exercise {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "exercise_muscle_group",
-            joinColumns = @JoinColumn(name = "exercise_id"),
-            inverseJoinColumns = @JoinColumn(name = "muscle_group_id")
-    )
-    private final List<MuscleGroup> muscleGroups = new ArrayList<>();
+    @ElementCollection(targetClass = MuscleGroup.class)
+    @CollectionTable(name = "exercise_muscle_group", joinColumns = @JoinColumn(name = "exercise_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<MuscleGroup> muscleGroups = new HashSet<>();
 
     @Builder
     public Exercise(String name) {

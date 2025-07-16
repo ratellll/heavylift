@@ -3,12 +3,10 @@ package com.workout.heavylift.dto.workoutlog;
 import com.workout.heavylift.domain.User;
 import com.workout.heavylift.domain.WorkoutLog;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,6 +23,8 @@ public class CreateWorkoutLogRequest {
 
     @Valid
     private List<WorkoutLogExerciseDto> logExercises;
+
+    private double caloriesBurned;
 
     public WorkoutLog toEntity(User user) {
         return WorkoutLog.builder()
