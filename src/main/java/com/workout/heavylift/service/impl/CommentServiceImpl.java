@@ -1,4 +1,4 @@
-package com.workout.heavylift.impl;
+package com.workout.heavylift.service.impl;
 
 
 import com.workout.heavylift.domain.BoardPost;
@@ -12,10 +12,10 @@ import com.workout.heavylift.repository.CommentRepository;
 import com.workout.heavylift.repository.UserRepository;
 import com.workout.heavylift.service.CommentService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +39,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CommentResponse> getCommentsByPost(Long postId) {
         return commentRepository.findByPostIdOrderByCreatedAtDesc(postId).stream()
                 .map(CommentResponse::fromEntity)
@@ -61,6 +62,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void validateAuthor(Long commentId, Long userId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("댓글 없음"));

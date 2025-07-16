@@ -1,4 +1,4 @@
-package com.workout.heavylift.impl;
+package com.workout.heavylift.service.impl;
 
 
 import com.workout.heavylift.config.SecurityUtil;
@@ -6,7 +6,7 @@ import com.workout.heavylift.domain.FavoriteRoutine;
 import com.workout.heavylift.domain.RoutineExercise;
 import com.workout.heavylift.domain.User;
 import com.workout.heavylift.domain.WorkoutRoutine;
-import com.workout.heavylift.dto.workoutoutine.WorkoutRoutineResponse;
+import com.workout.heavylift.dto.workoutroutine.WorkoutRoutineResponse;
 import com.workout.heavylift.repository.FavoriteRoutineRepository;
 import com.workout.heavylift.repository.RoutineExerciseRepository;
 import com.workout.heavylift.repository.UserRepository;
@@ -14,9 +14,9 @@ import com.workout.heavylift.repository.WorkoutRoutineRepository;
 import com.workout.heavylift.service.FavoriteRoutineService;
 import com.workout.heavylift.util.OneRepMaxUtil;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,6 +62,7 @@ public class FavoriteRoutineServiceImpl implements FavoriteRoutineService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<WorkoutRoutineResponse> getMyFavoriteRoutines() {
         Long userId = SecurityUtil.getCurrentUserId();
         User user = userRepository.findById(userId)
@@ -73,6 +74,7 @@ public class FavoriteRoutineServiceImpl implements FavoriteRoutineService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isFavorite(Long routineId) {
         Long userId = SecurityUtil.getCurrentUserId();
         User user = userRepository.findById(userId)
@@ -83,6 +85,7 @@ public class FavoriteRoutineServiceImpl implements FavoriteRoutineService {
 
         return favoriteRoutineRepository.existsByUserAndRoutine(user, routine);
     }
+
 
     public WorkoutRoutineResponse copyRoutine(Long routineId) {
         Long userId = SecurityUtil.getCurrentUserId();

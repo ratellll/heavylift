@@ -3,11 +3,15 @@ package com.workout.heavylift.dto.board;
 import com.workout.heavylift.domain.BoardPost;
 import com.workout.heavylift.domain.User;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateBoardPostRequest {
 
     private Long userId;

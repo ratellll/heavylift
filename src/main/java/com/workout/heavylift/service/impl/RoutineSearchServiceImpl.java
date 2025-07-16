@@ -1,8 +1,8 @@
-package com.workout.heavylift.impl;
+package com.workout.heavylift.service.impl;
 
 import com.workout.heavylift.domain.MuscleGroup;
 import com.workout.heavylift.domain.WorkoutRoutine;
-import com.workout.heavylift.dto.workoutoutine.WorkoutRoutineResponse;
+import com.workout.heavylift.dto.workoutroutine.WorkoutRoutineResponse;
 import com.workout.heavylift.repository.WorkoutRoutineRepository;
 import com.workout.heavylift.service.RoutineSearchService;
 import jakarta.transaction.Transactional;

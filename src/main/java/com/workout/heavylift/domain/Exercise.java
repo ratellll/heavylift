@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.util.Set;
+import java.util.HashSet;
 
 @Entity
 @Getter
@@ -18,9 +20,10 @@ public class Exercise {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @ElementCollection(targetClass = MuscleGroup.class)
+    @CollectionTable(name = "exercise_muscle_group", joinColumns = @JoinColumn(name = "exercise_id"))
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private MuscleGroup muscleGroup;
+    private Set<MuscleGroup> muscleGroups = new HashSet<>();
 
     @Builder
     public Exercise(String name) {
@@ -28,7 +31,7 @@ public class Exercise {
     }
 
     public void addMuscleGroup(MuscleGroup muscleGroup) {
-        this.muscleGroup =muscleGroup;
+        this.muscleGroups.add(muscleGroup);
     }
 }
 

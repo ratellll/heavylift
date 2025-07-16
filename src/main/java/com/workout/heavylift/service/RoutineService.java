@@ -1,8 +1,8 @@
 package com.workout.heavylift.service;
 
-import com.workout.heavylift.dto.workoutoutine.CreateWorkoutRoutineRequest;
-import com.workout.heavylift.dto.workoutoutine.UpdateWorkoutRoutineRequest;
-import com.workout.heavylift.dto.workoutoutine.WorkoutRoutineResponse;
+import com.workout.heavylift.dto.workoutroutine.CreateWorkoutRoutineRequest;
+import com.workout.heavylift.dto.workoutroutine.UpdateWorkoutRoutineRequest;
+import com.workout.heavylift.dto.workoutroutine.WorkoutRoutineResponse;
 
 import java.util.List;
 

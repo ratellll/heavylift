@@ -1,4 +1,4 @@
-package com.workout.heavylift.impl;
+package com.workout.heavylift.service.impl;
 
 
 import com.workout.heavylift.config.SecurityUtil;
@@ -6,19 +6,19 @@ import com.workout.heavylift.domain.Exercise;
 import com.workout.heavylift.domain.RoutineExercise;
 import com.workout.heavylift.domain.User;
 import com.workout.heavylift.domain.WorkoutRoutine;
-import com.workout.heavylift.dto.workoutoutine.CreateWorkoutRoutineRequest;
-import com.workout.heavylift.dto.workoutoutine.RoutineExerciseDto;
-import com.workout.heavylift.dto.workoutoutine.UpdateWorkoutRoutineRequest;
-import com.workout.heavylift.dto.workoutoutine.WorkoutRoutineResponse;
+import com.workout.heavylift.dto.workoutroutine.CreateWorkoutRoutineRequest;
+import com.workout.heavylift.dto.workoutroutine.RoutineExerciseDto;
+import com.workout.heavylift.dto.workoutroutine.UpdateWorkoutRoutineRequest;
+import com.workout.heavylift.dto.workoutroutine.WorkoutRoutineResponse;
 import com.workout.heavylift.repository.ExerciseRepository;
 import com.workout.heavylift.repository.RoutineExerciseRepository;
 import com.workout.heavylift.repository.UserRepository;
 import com.workout.heavylift.repository.WorkoutRoutineRepository;
 import com.workout.heavylift.service.RoutineService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,6 +70,7 @@ public class RoutineServiceImpl implements RoutineService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public WorkoutRoutineResponse getRoutine(Long routineId) {
         WorkoutRoutine routine = routineRepository.findById(routineId)
                 .orElseThrow(() -> new EntityNotFoundException("루틴을 찾을 수 없습니다."));
@@ -77,6 +78,7 @@ public class RoutineServiceImpl implements RoutineService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<WorkoutRoutineResponse> getAllRoutines() {
         return routineRepository.findAllSharedWithExercises().stream()
                 .map(WorkoutRoutineResponse::fromEntity)
@@ -84,6 +86,7 @@ public class RoutineServiceImpl implements RoutineService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<WorkoutRoutineResponse> getFavoriteRoutines() {
         Long userId = SecurityUtil.getCurrentUserId();
         return routineRepository.findFavoritesByUserId(userId).stream()

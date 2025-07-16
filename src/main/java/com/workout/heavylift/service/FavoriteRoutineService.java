@@ -1,7 +1,7 @@
 package com.workout.heavylift.service;
 
 
-import com.workout.heavylift.dto.workoutoutine.WorkoutRoutineResponse;
+import com.workout.heavylift.dto.workoutroutine.WorkoutRoutineResponse;
 
 import java.util.List;
 
@@ -13,5 +13,7 @@ public interface FavoriteRoutineService {
     List<WorkoutRoutineResponse> getMyFavoriteRoutines();
 
     boolean isFavorite(Long routineId);
+
+
 
 }

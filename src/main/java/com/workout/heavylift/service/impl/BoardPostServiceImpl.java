@@ -1,4 +1,4 @@
-package com.workout.heavylift.impl;
+package com.workout.heavylift.service.impl;
 
 import com.workout.heavylift.config.SecurityUtil;
 import com.workout.heavylift.domain.BoardPost;
@@ -10,8 +10,8 @@ import com.workout.heavylift.repository.BoardPostRepository;
 import com.workout.heavylift.repository.UserRepository;
 import com.workout.heavylift.service.BoardPostService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +42,7 @@ public class BoardPostServiceImpl implements BoardPostService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BoardPostResponse getPost(Long id) {
         BoardPost post = boardPostRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("게시글 없음"));
@@ -49,6 +50,7 @@ public class BoardPostServiceImpl implements BoardPostService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BoardPostResponse> getAllPosts() {
         return boardPostRepository.findAll().stream()
                 .map(BoardPostResponse::fromEntity)
@@ -93,6 +95,7 @@ public class BoardPostServiceImpl implements BoardPostService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isLiked(Long postId) {
         Long userId = SecurityUtil.getCurrentUserId();
         BoardPost post = boardPostRepository.findById(postId)
@@ -101,6 +104,7 @@ public class BoardPostServiceImpl implements BoardPostService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void validateAuthor(Long postId, Long userId) {
         BoardPost post = boardPostRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글 없음"));

@@ -5,6 +5,7 @@ import com.workout.heavylift.config.SecurityUtil;
 import com.workout.heavylift.dto.board.*;
 import com.workout.heavylift.service.BoardPostService;
 import com.workout.heavylift.service.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class BoardPostController {
     private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<BoardPostResponse> createPost(@RequestBody CreateBoardPostRequest request) {
+    public ResponseEntity<BoardPostResponse> createPost(@RequestBody @Valid CreateBoardPostRequest request) {
         return ResponseEntity.ok(boardPostService.create(request));
     }
 
@@ -35,7 +36,7 @@ public class BoardPostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BoardPostResponse> updatePost(@PathVariable Long id, @RequestBody UpdateBoardPostRequest request) {
+    public ResponseEntity<BoardPostResponse> updatePost(@PathVariable Long id, @RequestBody @Valid UpdateBoardPostRequest request) {
         Long userId = SecurityUtil.getCurrentUserId();
         boardPostService.validateAuthor(id, userId);
         return ResponseEntity.ok(boardPostService.updatePost(id, request));
@@ -67,7 +68,7 @@ public class BoardPostController {
     }
 
     @PostMapping("/{postId}/comments")
-    public ResponseEntity<CommentResponse> createComment(@PathVariable Long postId, @RequestBody CreateCommentRequest request) {
+    public ResponseEntity<CommentResponse> createComment(@PathVariable Long postId, @RequestBody @Valid CreateCommentRequest request) {
         return ResponseEntity.ok(commentService.create(postId, request));
     }
 
@@ -77,7 +78,7 @@ public class BoardPostController {
     }
 
     @PutMapping("/comments/{commentId}")
-    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentRequest request) {
+    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long commentId, @RequestBody @Valid UpdateCommentRequest request) {
         Long userId = SecurityUtil.getCurrentUserId();
         commentService.validateAuthor(commentId, userId);
         return ResponseEntity.ok(commentService.update(commentId, request));

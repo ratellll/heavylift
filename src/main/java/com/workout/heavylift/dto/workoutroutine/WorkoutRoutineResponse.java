@@ -1,4 +1,4 @@
-package com.workout.heavylift.dto.workoutoutine;
+package com.workout.heavylift.dto.workoutroutine;
 
 import com.workout.heavylift.domain.WorkoutRoutine;
 import lombok.Builder;

@@ -4,6 +4,7 @@ package com.workout.heavylift.controller;
 import com.workout.heavylift.dto.user.CreateUserRequest;
 import com.workout.heavylift.dto.user.UserResponse;
 import com.workout.heavylift.service.AuthService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponse> signup(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<UserResponse> signup(@RequestBody @Valid CreateUserRequest request) {
         return ResponseEntity.ok(authService.signup(request));
     }
 

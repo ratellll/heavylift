@@ -1,4 +1,4 @@
-package com.workout.heavylift.impl;
+package com.workout.heavylift.service.impl;
 
 
 import com.workout.heavylift.config.jwt.JwtProvider;

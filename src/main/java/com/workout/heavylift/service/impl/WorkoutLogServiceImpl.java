@@ -1,4 +1,4 @@
-package com.workout.heavylift.impl;
+package com.workout.heavylift.service.impl;
 
 
 import com.workout.heavylift.config.SecurityUtil;
@@ -15,9 +15,9 @@ import com.workout.heavylift.repository.WorkoutLogRepository;
 import com.workout.heavylift.service.WorkoutLogService;
 import com.workout.heavylift.util.OneRepMaxUtil;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -76,6 +76,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<WorkoutLogResponse> getLogsByDate(LocalDate date) {
         Long userId = SecurityUtil.getCurrentUserId();
         LocalDateTime start = date.atStartOfDay();
@@ -88,6 +89,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public WorkoutLogResponse getLogById(Long logId) {
         WorkoutLog log = workoutLogRepository.findById(logId)
                 .orElseThrow(() -> new EntityNotFoundException("WorkoutLog not found"));
@@ -104,6 +106,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<WorkoutLogResponse> getWeeklyStats() {
         Long userId = SecurityUtil.getCurrentUserId();
         LocalDateTime start = LocalDate.now().minusDays(6).atStartOfDay();
@@ -116,6 +119,7 @@ public class WorkoutLogServiceImpl implements WorkoutLogService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<WorkoutLogResponse> getMonthlyStats() {
         Long userId = SecurityUtil.getCurrentUserId();
         LocalDateTime start = LocalDate.now().minusDays(29).atStartOfDay();

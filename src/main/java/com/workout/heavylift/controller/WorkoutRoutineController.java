@@ -1,11 +1,12 @@
 package com.workout.heavylift.controller;
 
 
-import com.workout.heavylift.dto.workoutoutine.CreateWorkoutRoutineRequest;
-import com.workout.heavylift.dto.workoutoutine.UpdateWorkoutRoutineRequest;
-import com.workout.heavylift.dto.workoutoutine.WorkoutRoutineResponse;
+import com.workout.heavylift.dto.workoutroutine.CreateWorkoutRoutineRequest;
+import com.workout.heavylift.dto.workoutroutine.UpdateWorkoutRoutineRequest;
+import com.workout.heavylift.dto.workoutroutine.WorkoutRoutineResponse;
 import com.workout.heavylift.service.FavoriteRoutineService;
 import com.workout.heavylift.service.RoutineService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class WorkoutRoutineController {
 
 
     @PostMapping
-    public ResponseEntity<WorkoutRoutineResponse> createRoutine(@RequestBody CreateWorkoutRoutineRequest request) {
+    public ResponseEntity<WorkoutRoutineResponse> createRoutine(@RequestBody @Valid CreateWorkoutRoutineRequest request) {
         return ResponseEntity.ok(routineService.createRoutine(request));
     }
 
@@ -31,7 +32,7 @@ public class WorkoutRoutineController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WorkoutRoutineResponse> updateRoutine(@PathVariable Long id,@RequestBody UpdateWorkoutRoutineRequest request) {
+    public ResponseEntity<WorkoutRoutineResponse> updateRoutine(@PathVariable Long id,@RequestBody @Valid UpdateWorkoutRoutineRequest request) {
         return ResponseEntity.ok(routineService.updateRoutine(id, request));
     }
 

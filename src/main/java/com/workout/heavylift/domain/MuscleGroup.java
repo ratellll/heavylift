@@ -8,6 +8,7 @@ public enum MuscleGroup {
     TRICEPS,
     LEGS,
     CORE,
-    HIP
+    HIP ,
+    aerobicActivity
 }
 
