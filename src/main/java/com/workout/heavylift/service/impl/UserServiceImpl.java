@@ -5,10 +5,12 @@ import com.workout.heavylift.domain.User;
 import com.workout.heavylift.dto.user.CreateUserRequest;
 import com.workout.heavylift.dto.user.UpdateUserRequest;
 import com.workout.heavylift.dto.user.UserResponse;
+import com.workout.heavylift.exception.DuplicateEmailException;
+import com.workout.heavylift.exception.UserNotFoundException;
 import com.workout.heavylift.repository.UserRepository;
 import com.workout.heavylift.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,43 +23,73 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponse createUser(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+            throw new DuplicateEmailException(request.getEmail());
         }
-        User saved = userRepository.save(request.toEntity());
+        User user = request.toEntity();
+        // 비밀번호 암호화
+        user.changeUserPassword(passwordEncoder.encode(request.getPassword()));
+        User saved = userRepository.save(user);
         return UserResponse.fromEntity(saved);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public UserResponse getUser(Long id) {
+    public UserResponse findUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException(id));
         return UserResponse.fromEntity(user);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<UserResponse> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(UserResponse::fromEntity)
-                .collect(Collectors.toList());
     }
 
     @Override
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
+        // 이름 업데이트
+        if (request.getName() != null) {
+            user.changeUserName(request.getName());
+        }
+        // 닉네임 업데이트
         if (request.getNickName() != null) {
             user.changeUserNickName(request.getNickName());
         }
-        if (request.getPassword() != null) {
-            user.changeUserPassword(request.getPassword());
+        // 이메일 업데이트 및 중복 검증
+        if (request.getEmail() != null
+                && !user.getEmail().equals(request.getEmail())) {
+            if (userRepository.existsByEmail(request.getEmail())) {
+                throw new DuplicateEmailException(request.getEmail());
+            }
+            user.changeUserEmail(request.getEmail());
         }
-        return UserResponse.fromEntity(user);
+        // 비밀번호 업데이트
+        if (request.getPassword() != null) {
+            String encoded = passwordEncoder.encode(request.getPassword());
+            user.changeUserPassword(encoded);
+        }
+
+        User updated = userRepository.save(user);
+        return UserResponse.fromEntity(updated);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException(id);
+        }
+        userRepository.deleteById(id);
     }
 }
