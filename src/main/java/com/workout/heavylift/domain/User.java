@@ -32,13 +32,13 @@ public class User {
     private String password;
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private final List<WorkoutRoutine> workoutRoutines = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private final List<WorkoutLog> workoutLogs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BoardPost> postList = new ArrayList<>();
 
     @Builder
@@ -49,8 +49,16 @@ public class User {
         this.password = password;
     }
 
+    public void changeUserName(String name) {
+        this.name = name;
+    }
+
     public void changeUserNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public void changeUserEmail(String email) {
+        this.email = email;
     }
 
     public void changeUserPassword(String password) {
