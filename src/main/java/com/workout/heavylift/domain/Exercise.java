@@ -12,7 +12,6 @@ import java.util.HashSet;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Exercise {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

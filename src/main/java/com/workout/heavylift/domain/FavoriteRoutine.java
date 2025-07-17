@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "routine_id"})})
 public class FavoriteRoutine {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
